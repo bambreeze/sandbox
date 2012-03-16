@@ -1,0 +1,123 @@
+<a name="reg_scratch_pad"></a>
+<!-- Register scratch_pad -->
+<table class="register" summary="summary">
+<caption>Register: [scratch_pad] Scratch pad register (@0x0)</caption>
+  <tr>
+    <th class="desc">Description</th>
+    <td>&nbsp;</td>
+    <td class="desc_value">This is the scratch pad register.</td>
+  </tr>
+  <tr>
+    <th class="resetsignal">Resetsignal</th>
+    <td>&nbsp;</td>
+    <td class="resetsignal_value"> [RESET]</td>
+  </tr>
+</table>
+<br />
+<table class="field" summary="summary">
+  <tr>
+        <th class="bits">Bits</th>
+        <th class="name">Name</th>
+        <th class="sw">SW</th>
+        <th class="desc">Description</th>
+        <th class="reset">Reset</th>
+      </tr>
+      <tr>
+        <td class="bits">31:0</td>
+        <td class="name">  scratch pad field [scratch_pad]</td>
+        <td class="access">R/W</td>
+        <td class="desc">  software can write and read the scratch pad field.</td>
+        <td class="reset">32'h00000000</td>
+      </tr>
+    </table>
+    <br />
+<hr />
+<a name="reg_chip_id"></a>
+<!-- Register chip_id -->
+<table class="register" summary="summary">
+<caption>Register: [chip_id] Chip ID/pointer register (@0x4)</caption>
+  <tr>
+    <th class="desc">Description</th>
+    <td>&nbsp;</td>
+    <td class="desc_value">This register holds the chip id or pointer to build info.</td>
+  </tr>
+  <tr>
+    <th class="resetsignal">Resetsignal</th>
+    <td>&nbsp;</td>
+    <td class="resetsignal_value"> [RESET]</td>
+  </tr>
+</table>
+<br />
+<table class="field" summary="summary">
+  <tr>
+        <th class="bits">Bits</th>
+        <th class="name">Name</th>
+        <th class="sw">SW</th>
+        <th class="desc">Description</th>
+        <th class="reset">Reset</th>
+      </tr>
+      <tr>
+        <td class="bits">31</td>
+        <td class="name">  Is Chip ID [is_chip_id]</td>
+        <td class="access">R</td>
+        <td class="desc">  If the is_chip_id bit is 1, then the chip id is stored in id_ptr field. If this bit is not set, then id_ptr contains the pointer to the build_number register or build_info_rom</td>
+        <td class="reset">1'h1</td>
+      </tr>
+      <tr>
+        <td class="bits">30:0</td>
+        <td class="name">  Chip ID or Pointer [id_ptr]</td>
+        <td class="access">R</td>
+        <td class="desc">  This field contains a read-only field with no hardware access.This is used for non-overwritable registers such as chip ID</td>
+        <td class="reset">31'h5245444D</td>
+      </tr>
+    </table>
+    <br />
+<hr />
+<a name="reg_csrs_rev_id"></a>
+<!-- Register rev_id -->
+<table class="register" summary="summary">
+<caption>Register: [rev_id] Revision ID register (@0x8)</caption>
+  <tr>
+    <th class="desc">Description</th>
+    <td>&nbsp;</td>
+    <td class="desc_value">This register maintains the revision ID.</td>
+  </tr>
+  <tr>
+    <th class="resetsignal">Resetsignal</th>
+    <td>&nbsp;</td>
+    <td class="resetsignal_value">N/A</td>
+  </tr>
+</table>
+<br />
+<table class="field" summary="summary">
+  <tr>
+        <th class="bits">Bits</th>
+        <th class="name">Name</th>
+        <th class="sw">SW</th>
+        <th class="desc">Description</th>
+        <th class="reset">Reset</th>
+      </tr>
+      <tr>
+        <td class="bits">31:24</td>
+        <td class="name">  Debug [debug]</td>
+        <td class="access">R</td>
+        <td class="desc">  Debug version number. Should 0 for stable, release images.</td>
+        <td class="reset">(undef)</td>
+      </tr>
+      <tr>
+        <td class="bits">23:16</td>
+        <td class="name">  Major [major]</td>
+        <td class="access">R</td>
+        <td class="desc">  Major version number.</td>
+        <td class="reset">(undef)</td>
+      </tr>
+      <tr>
+        <td class="bits">15:0</td>
+        <td class="name">  Minor [minor]</td>
+        <td class="access">R</td>
+        <td class="desc">  Minor version number.</td>
+        <td class="reset">(undef)</td>
+      </tr>
+    </table>
+    <br />
+<hr />
