@@ -12,5 +12,8 @@ print $cwd;
         "Fri" => "Friday",
         "Sat" => "Saturday",
         );
-
 print $longday{"Wed"}, "\n";
+
+$a = 12;
+$b = 3;
+print $a x $b, "\n";
