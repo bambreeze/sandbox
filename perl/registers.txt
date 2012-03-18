@@ -1,5 +1,7 @@
          
 first register, 0x0 
   second  Reg,    16   
-        3rd REGISTER,   28h         
+        3rd REGISTER,   2ah         
+    the 4th REGISTER, 3c         
+the No.5 REGISTER, 0x2B0         
 
