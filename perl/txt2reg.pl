@@ -14,11 +14,8 @@ while (<TXT_FILE>) {
     my ($name, $address) = split /,/;
     if ($address =~ /0[xX]([\dA-Fa-f]+)|([\dA-Fa-f]+)/) {
         $address = sprintf "0x%08X", hex($&);
-
-        $name =~ s/\s+/_/g;
-        $name = uc($name);
-
-        $table{$address} = $name;
+        $name =~ s/\W+/_/g;
+        $table{$address} = uc($name);
     } else {
         print "Something worng! We need an address for this register \
         '$name'\n";
