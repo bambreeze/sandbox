@@ -5,6 +5,12 @@ my %table;
 open TXT_FILE, "registers.txt" or die $!;
 while (<TXT_FILE>) {
     chomp;
+
+    s/^\s+//; # strip leading  whitespace
+    s/\s+$//; # strip trailing whitespace
+
+    next unless $_;
+
     my ($name, $address) = split /,/;
     my $name_org = $name;
 
