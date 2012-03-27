@@ -6,10 +6,10 @@ open TXT_FILE, "registers.txt" or die $!;
 while (<TXT_FILE>) {
     chomp;
 
-    next if /^#/;   # discard comments
-    s/^\s+//;       # strip leading  whitespace
-    s/\s+$//;       # strip trailing whitespace
-    next unless $_;
+    next if /^#/;    # discard comments
+    next if /^\s*$/; # discard blank lines
+    s/^\s+//;        # strip leading  whitespace
+    s/\s+$//;        # strip trailing whitespace
 
     my ($name, $address) = split /,/;
     if ($address =~ /0[xX]([\dA-Fa-f]+)|([\dA-Fa-f]+)/) {
