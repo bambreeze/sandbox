@@ -8,3 +8,8 @@ while (<DICT>) {
 
 print $first, "\n";     # print "neurad"
 print $last, "\n";      # print "neurypnology"
+
+$_ = "I saw Barney\ndown at the bowling alley\nwith fred\nlast night.\n";
+if (/Barney.*fred/s) {
+    print "That string mentions fred after Barney!\n";
+}
