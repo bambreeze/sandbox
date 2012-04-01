@@ -5,8 +5,8 @@ use HTML::TokeParser;
 my %table;
 
 #$FILENAME = "registers.html";
-my $parser = HTML::TokeParser->new(shift||"registers.html")
-    or die "Can't open file: $!\n";
+my $parser = HTML::TokeParser->new(shift || "registers.html")
+    or die "Can't open: $!\n";
 while (my $token = $parser->get_tag("a")) {
     my $name = $token->[1]{name};
     my $caption = $parser->get_trimmed_text("/caption");
