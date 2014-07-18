@@ -1,0 +1,39 @@
+
+# Please make this file available to others
+# by sending it to <lirc@bartelmus.de>
+#
+# this config file was automatically generated
+# using lirc-0.9.0-pre1(default) on Fri Jul 18 13:28:58 2014
+#
+# contributed by 
+#
+# brand:                       /home/pi/lircd.conf
+# model no. of remote control: 
+# devices being controlled by this remote:
+#
+
+begin remote
+
+  name  /home/pi/lircd.conf
+  bits            4
+  flags SPACE_ENC|CONST_LENGTH
+  eps            30
+  aeps          100
+
+  header       2408   608
+  one          1194   596
+  zero          595   596
+  post_data_bits  8
+  post_data      0x90
+  gap          44888
+  toggle_bit_mask 0x0
+
+      begin codes
+          KEY_POWER                0xA
+          KEY_VOLUMEUP             0x4
+          KEY_VOLUMEDOWN           0xC
+      end codes
+
+end remote
+
+

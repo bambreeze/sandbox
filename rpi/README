@@ -1,0 +1,4 @@
+sudo python button.py
+
+gcc -o button button.c -lbcm2835
+sudo ./button
