@@ -1,0 +1,46 @@
+
+# Please make this file available to others
+# by sending it to <lirc@bartelmus.de>
+#
+# this config file was automatically generated
+# using lirc-0.9.0-pre1(default) on Sat Jul 26 11:50:02 2014
+#
+# contributed by 
+#
+# brand:                       /home/pi/lircd.conf
+# model no. of remote control: 
+# devices being controlled by this remote:
+#
+
+begin remote
+
+  name  /home/pi/lircd.conf
+  bits           13
+  flags RC6|CONST_LENGTH
+  eps            30
+  aeps          100
+
+  header       2682   902
+  one           442   448
+  zero          442   448
+  pre_data_bits   8
+  pre_data       0x77
+  gap          106997
+  min_repeat      1
+#  suppress_repeat 1
+#  uncomment to suppress unwanted repeats
+  toggle_bit_mask 0x10000
+  rc6_mask    0x10000
+
+      begin codes
+          KEY_VOLUMEUP             0x1BA7
+          KEY_VOLUMEDOWN           0x1BA6
+          KEY_VIDEO_PREV           0x1BA5
+          KEY_VIDEO_NEXT           0x1BA4
+          KEY_PLAY                 0x1BD3
+          KEY_STOP                 0x1BCE
+      end codes
+
+end remote
+
+
