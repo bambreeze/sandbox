@@ -1,0 +1,2 @@
+The  only difference between pipes and FIFOs is the manner in which they are created and opened.
+Once these tasks have been accomplished, I/O on pipes and FIFOs has exactly the same semantics.
