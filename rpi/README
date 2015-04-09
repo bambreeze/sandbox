@@ -12,3 +12,10 @@ python read_cpu_temp.py
 gcc -o read_cpu_temp read_cpu_temp.c
 ./read_cpu_temp
 
+3. GPIO - led test
+----------------------
+sudo python led.py
+
+gcc -o led led.c -lbcm2835
+sudo ./led
+
