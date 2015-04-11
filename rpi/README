@@ -19,3 +19,8 @@ sudo python led.py
 gcc -o led led.c -lbcm2835
 sudo ./led
 
+4. Read the DHT11 humidity and temperature
+----------------------
+gcc -o dht11 *.c -std=c99 -I. -lbcm2835
+sudo ./dht11
+
