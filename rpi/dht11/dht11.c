@@ -12,6 +12,8 @@
 #include <unistd.h>
 #include <bcm2835.h>
 
+#define DHT11_DATA RPI_V2_GPIO_P1_07   // RPi Pin #7
+
 int readDHT(int pin, unsigned int *data)
 {
     int i = 0, j = 0;
@@ -39,24 +41,24 @@ int readDHT(int pin, unsigned int *data)
         counter = 0;
         while (bcm2835_gpio_lev(pin) == laststate) {
             counter++;
-            //nanosleep(1);		// overclocking might change this?
             if (counter == 1000)
                 break;
         }
         if (counter == 1000) break;
         laststate = bcm2835_gpio_lev(pin);
 
-        if ((i>3) && (i%2 == 0)) {
-            // shove each bit into the storage bytes
-            data[j/8] <<= 1;
+        // shove each bit into the storage bytes
+        if ((i > 3) && (i % 2 == 0)) {
+            data[j / 8] <<= 1;
             if (counter > 200)
-                data[j/8] |= 1;
+                data[j / 8] |= 1;
             j++;
         }
     }
 
-    printf("Data (%d): 0x%x 0x%x 0x%x 0x%x 0x%x\n", j, data[0], data[1], data[2], data[3], data[4]);
-    if ((j >= 39) && (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) ) {
+    printf("DHT11 Data (%d bits): 0x%x 0x%x 0x%x 0x%x 0x%x\n",
+            j, data[0], data[1], data[2], data[3], data[4]);
+    if (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) {
         printf("Temp = %d *C, Hum = %d \%\n", data[2], data[0]);
     }
 
@@ -72,8 +74,8 @@ int main(int argc, char **argv)
 		return 1;  
 
 	while (counter++ < 10) {
-        memset(data, 100, 100 * sizeof(uint32_t));
-        readDHT(4, data); // RPI PIN #7
+        memset(data, 0, 100 * sizeof(uint32_t));
+        readDHT(DHT11_DATA, data);
 	}
 
 	bcm2835_close();  

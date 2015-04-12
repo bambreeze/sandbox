@@ -8,3 +8,6 @@ OBJ = dht11.o
 
 dht11: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
+
+clean:
+	rm -rf *.o dht11

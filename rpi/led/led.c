@@ -1,7 +1,7 @@
 #include <stdio.h>  
 #include <bcm2835.h>  
   
-#define LED RPI_V2_GPIO_P1_11   // P1 PIN 11
+#define LED RPI_V2_GPIO_P1_11   // RPi Pin #11
 
 int main(int argc, char **argv)
 {
