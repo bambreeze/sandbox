@@ -76,9 +76,8 @@ void *workerer_thread(void *arg)
 
     queue = arg;
     while (1) {
+        pthread_mutex_lock(&queue->mutex);
         if (queue->counter) {
-            pthread_mutex_lock(&queue->mutex);
-
             // get one request
             req = queue->entry[queue->out];
             queue->counter--;
@@ -102,12 +101,13 @@ void *workerer_thread(void *arg)
             time(&t);
             printf("after cond wait - %s", ctime(&t));
 
+            printf("\n  <== free req ... interface: 0x%08x\n\n", req->interface);
             free(req);
             req = NULL;
-            printf("\nfree req...\n\n");
 
             pthread_mutex_unlock(&queue->mutex);    
         } else {
+            pthread_mutex_unlock(&queue->mutex);    
             printf("[pid %d] no req...\n", gettid());
             sleep(1);
         }
@@ -123,19 +123,18 @@ void *notifier_thread(void * arg)
 
     queue = arg;
     while (1) {
-        sleep(2 + (rand() % 3));
+        sleep((rand() % 2));
 
+        pthread_mutex_lock(&queue->mutex);
         if (queue->waiting) {
-            pthread_mutex_lock(&queue->mutex);
-
             time(&t);
             printf("before cond signal - %s", ctime(&t));
             pthread_cond_signal(&queue->cond);
             time(&t);
             printf("after cond signal - %s", ctime(&t));
-
             pthread_mutex_unlock(&queue->mutex);    
         } else {
+            pthread_mutex_unlock(&queue->mutex);    
             printf("[pid %d] no pending...\n", gettid());
         }
     }

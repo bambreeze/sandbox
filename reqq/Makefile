@@ -1,5 +1,4 @@
 CC = gcc
-#CFLAGS = -std=c99 -I. -pthread
 CFLAGS = -pthread
 
 DEPS = 
@@ -10,6 +9,8 @@ OBJ = reqq.o
 
 reqq: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+	csct
 
 clean:
 	rm -rf *.o reqq
+	rm -rf cscope* tags
