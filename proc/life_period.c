@@ -18,8 +18,8 @@ int main(void)
 		pause();
 		_exit(0);
 	} else {
-#if 1 /* define 1 to make child process always a zomie */
-		printf("ppid:%d\n", getpid());
+#if 0 /* define 1 to make child process always a zomie */
+		printf("parent process id:%d\n", getpid());
 		while(1);
 #endif
 		do {
