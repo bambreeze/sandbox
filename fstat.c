@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-//#include <unistd.h>
 
 int main()
 {
@@ -14,7 +13,7 @@ int main()
     char ver[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     int version = 0;
     
-    for (i = 3; i < 5; i++) {
+    for (i = 0; i < 3; i++) {
         snprintf(cmd, 255, "touch blank%d", i);
         system(cmd);
     }
