@@ -11,7 +11,10 @@ def encrypt_xor2(data, key):
 fname = sys.argv[1]
 pw = sys.argv[2]
 
-fname2 = fname[:fname.find('.')]
+if fname.find('.') == -1:
+    fname2 = fname
+else:
+    fname2 = fname[:fname.find('.')]
 fname2 = fname2[::-1]
 
 print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
