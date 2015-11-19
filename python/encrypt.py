@@ -10,7 +10,9 @@ def encrypt_xor2(data, key):
 
 fname = sys.argv[1]
 pw = sys.argv[2]
-fname2 = sys.argv[1] + '.cpt'
+
+fname2 = fname[:fname.find('.')]
+fname2 = fname2[::-1]
 
 print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
 infile  = open(fname, "rb")
