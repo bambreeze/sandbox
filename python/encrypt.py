@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, string
+import os, sys, string, time
 
 def encrypt_xor2(data, key):
     buff = ""
@@ -12,6 +12,7 @@ fname = sys.argv[1]
 pw = sys.argv[2]
 fname2 = sys.argv[1] + '.cpt'
 
+print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
 infile  = open(fname, "rb")
 outfile = open(fname2, "wb")
 
@@ -21,10 +22,10 @@ while 1:
         break;
 
     line2 = encrypt_xor2(line, pw)
-    #print line2
     outfile.write(line2)
 
 infile.close()
 outfile.close()
 
 #os.remove(fname)
+print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
