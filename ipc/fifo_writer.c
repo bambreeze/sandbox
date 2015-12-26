@@ -21,13 +21,16 @@
 
 int main(int argc, char *argv[])
 {
-    int outfd = open("Readme2", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (outfd == -1)
+    mkfifo("myfifo", 0644);
+    int infd = open("myin", O_RDONLY);
+    if (infd == -1) {
+        printf("please create file - myin\n");
         ERR_EXIT("open error");
+    }
 
-    int infd;
-    infd = open("myfifo", O_RDONLY);
-    if (infd == -1)
+    int outfd;
+    outfd = open("myfifo", O_WRONLY);
+    if (outfd == -1)
         ERR_EXIT("open error");
 
     char buf[1024];
@@ -37,6 +40,6 @@ int main(int argc, char *argv[])
 
     close(infd);
     close(outfd);
-    unlink("myfifo"); // delete a name and possibly the file it refers to
+
     return 0;
 }

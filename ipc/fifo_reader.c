@@ -21,15 +21,16 @@
 
 int main(int argc, char *argv[])
 {
-    mkfifo("myfifo", 0644);
-    int infd = open("Readme", O_RDONLY);
-    if (infd == -1)
-        ERR_EXIT("open error");
-
-    int outfd;
-    outfd = open("myfifo", O_WRONLY);
+    int outfd = open("myout", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (outfd == -1)
         ERR_EXIT("open error");
+
+    int infd;
+    infd = open("myfifo", O_RDONLY);
+    if (infd == -1) {
+        printf("can't open fifo\n");
+        ERR_EXIT("open error");
+    }
 
     char buf[1024];
     int n;
@@ -38,6 +39,6 @@ int main(int argc, char *argv[])
 
     close(infd);
     close(outfd);
-
+    unlink("myfifo"); // delete a name and possibly the file it refers to
     return 0;
 }
