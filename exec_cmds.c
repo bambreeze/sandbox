@@ -6,8 +6,8 @@ main()
 {
     int status = 0;
 
-    //status = system("cat non-exist-file");
-    status = system("./forever");
+    status = system("cat non-exist-file");
+    //status = system("./forever");
     if (status){
         printf("system error %d\n", status);
     }
