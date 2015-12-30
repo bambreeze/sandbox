@@ -15,6 +15,7 @@ typedef struct _req_entry {
 
 typedef struct _req_queue {
     req_entry *entry[16];
+    int current;
     int counter;
     int waiting;
     pthread_mutex_t mutex;
@@ -32,18 +33,34 @@ void handler(int signo)
 void *work_thread(void *arg)
 {
     req_queue *queue = NULL;
+    req_entry *req = NULL;
 
     queue = arg;
     while (1) {
         sleep(2);
 
-        pthread_mutex_lock(&queue->mutex);
-        queue->waiting = 1;
-        printf("before cond wait\n");
-        pthread_cond_wait(&queue->cond, &queue->mutex);
-        printf("after cond wait\n");
-        queue->waiting = 0;
-        pthread_mutex_unlock(&queue->mutex);    
+        if (queue->current < queue->counter) {
+            pthread_mutex_lock(&queue->mutex);
+
+            req = queue->entry[queue->current];
+            queue->current++;
+            if (queue->current == 16) {
+                queue->current = 0;
+            }
+
+            printf("processing...\n");
+            printf("  req->is_v4: %d\n", req->is_v4);
+            printf("  req->is_add: %d\n", req->is_add);
+            printf("  req->interface: 0x%08x\n", req->interface);
+            printf("processing done\n");
+
+            queue->waiting = 1;
+            printf("before cond wait\n");
+            pthread_cond_wait(&queue->cond, &queue->mutex);
+            printf("after cond wait\n");
+            queue->waiting = 0;
+            pthread_mutex_unlock(&queue->mutex);    
+        }
     }
 }
 
@@ -73,6 +90,7 @@ void init_queue(req_queue *queue)
         queue->entry[i] = NULL;
     }
 
+    queue->current = 0;
     queue->counter = 0;
     queue->waiting = 0;
 
@@ -80,7 +98,7 @@ void init_queue(req_queue *queue)
     pthread_cond_init(&queue->cond, NULL);
 }
 
-int add_req(req_queue *queue)
+int add_req(req_queue *queue, int is_v4, int is_add, int interface)
 {
     req_entry *req = NULL;
 
@@ -90,9 +108,9 @@ int add_req(req_queue *queue)
         exit(1);
     }
 
-    req->is_v4       = 1;
-    req->is_add      = 1;
-    req->interface   = 0x12345678;
+    req->is_v4       = is_v4;
+    req->is_add      = is_add;
+    req->interface   = interface;
 
     pthread_mutex_lock(&queue->mutex);
     queue->entry[queue->counter] = req;
@@ -121,7 +139,10 @@ int main()
     }
 
     init_queue(global_req_queue);
-    add_req(global_req_queue);
+    add_req(global_req_queue, 1, 1, 0x12340001);
+    add_req(global_req_queue, 1, 0, 0x12340002);
+    add_req(global_req_queue, 0, 1, 0x12340003);
+    add_req(global_req_queue, 0, 0, 0x12340004);
 
     pthread_t work;
     if (pthread_create(&work, NULL, work_thread, global_req_queue) != 0) {
