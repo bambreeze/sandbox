@@ -80,12 +80,12 @@ void *workerer_thread(void *arg)
             pthread_mutex_lock(&queue->mutex);
 
             // get one request
-            req = queue->entry[queue->in];
+            req = queue->entry[queue->out];
             queue->counter--;
-            queue->entry[queue->in] = NULL;
-            queue->in++;
-            if (queue->in == BUFLEN) {
-                queue->in = 0;
+            queue->entry[queue->out] = NULL;
+            queue->out++;
+            if (queue->out == BUFLEN) {
+                queue->out = 0;
             }
 
             printf("\nprocessing...\n");
@@ -161,11 +161,11 @@ int add_req(req_queue *queue, int is_v4, int is_add, int interface)
     req->interface   = interface;
 
     pthread_mutex_lock(&queue->mutex);
-    queue->entry[queue->out] = req;
+    queue->entry[queue->in] = req;
     queue->counter++;
-    queue->out++;
-    if (queue->out == BUFLEN) {
-        queue->out = 0;
+    queue->in++;
+    if (queue->in == BUFLEN) {
+        queue->in = 0;
     }
     pthread_mutex_unlock(&queue->mutex);    
 

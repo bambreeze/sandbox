@@ -1,0 +1,10 @@
+How to build "reqq" program? (request queue)
+--------------------------------------------
+$ gcc -pthread -o reqq reqq.c
+
+How to run "reqq" program?
+--------------------------------------------
+1) run the target program in the 1st window.
+$ ./reqq
+2) run the Python script to generate request in the 2nd window.
+$ ./greq.py
