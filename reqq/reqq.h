@@ -3,7 +3,11 @@
 
 #include <unistd.h>
 #include <sys/syscall.h>
+#ifndef __NR_gettid
+#define gettid() getpid()
+#else
 #define gettid() (int) syscall(__NR_gettid)
+#endif
 
 #define BUFLEN 16
 
