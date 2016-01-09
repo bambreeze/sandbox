@@ -21,7 +21,7 @@ typedef struct _cmd_entry {
 typedef struct _cmd_queue {
     int in;
     int out;
-    int counter;
+    unsigned int counter;
     cmd_entry *entry[CMDQLEN];
     pthread_mutex_t mutex;
 } cmd_queue;

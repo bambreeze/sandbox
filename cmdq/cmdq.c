@@ -23,7 +23,7 @@ void handler1(int signo)
     interface = global_interface;  
     global_interface++;
 
-    printf("\n  ==> add comd, interface: 0x%08x\n", interface);
+    printf("\n  ==> add command, interface: 0x%08x\n", interface);
     add_cmd(global_cmd_queue, interface);
 }
 
@@ -32,6 +32,7 @@ void *worker_thread(void *arg)
     cmd_queue *queue = NULL;
     cmd_entry *cmd = NULL;
     int pending_cmd = 0;
+    int status = 0;
 
     time_t t;
     time(&t);
@@ -56,7 +57,9 @@ void *worker_thread(void *arg)
 
             printf("\nexecute commands...\n");
             printf("  cmd->interface: 0x%08x\n", cmd->interface);
-            printf("done\n\n");
+            printf("  cmd->cmd: %s\n", cmd->cmd);
+            status = system(cmd->cmd);
+            printf("done, return %d\n\n", status);
 
             printf("\n  <== free cmd ... interface: 0x%08x\n\n", cmd->interface);
             free(cmd);
@@ -71,6 +74,9 @@ void *worker_thread(void *arg)
 int add_cmd(cmd_queue *queue, int interface)
 {
     cmd_entry *cmd = NULL;
+    char str[256];
+    char *fbin = NULL;
+    char *fcfg = "cmd_file";
 
     if (queue->counter == CMDQLEN) {
         printf("\n!!! cmd-queue is full, will discard cmd !!!\n");
@@ -84,9 +90,17 @@ int add_cmd(cmd_queue *queue, int interface)
     }
 
     cmd->interface   = interface;
-    // FIXME
-    //cmd->cmd   = interface;
-    //cmd->fname   = interface;
+    if (interface % 5 == 0) {
+        fbin = "../util/sleep2to5sr1";
+    } else {
+        fbin = "../util/sleep2to5sr0";
+    }
+    memcpy(cmd->cmd, fbin, strlen(fbin) + 1);
+
+    system("date > cmd_file");
+    snprintf(cmd->fname, sizeof(cmd->fname), "cmd_file.%d", queue->in);
+    snprintf(str, sizeof(str), "cp cmd_file %s", cmd->fname);
+    system(str);
 
     pthread_mutex_lock(&queue->mutex);
     queue->entry[queue->in] = cmd;
