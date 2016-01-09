@@ -1,0 +1,10 @@
+How to build "cmdq" program? (command queue)
+--------------------------------------------
+$ gcc -pthread -o cmdq cmdq.c
+
+How to run "cmdq" program?
+--------------------------------------------
+1) run the target program in the 1st window.
+$ ./cmdq
+2) run the Python script to generate command in the 2nd window.
+$ ./gcmd.py
