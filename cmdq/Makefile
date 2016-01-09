@@ -14,3 +14,4 @@ cmdq: $(OBJ)
 clean:
 	rm -rf *.o cmdq
 	rm -rf cscope* tags
+	rm -rf cmd_file*
