@@ -71,8 +71,8 @@ int main(void)
     printf ("Current local time and date: %s", asctime(timeinfo));
 
     printf("=== test 4 ===\n");
-    clock_gettime(CLOCK_MONOTONIC, &cur);
-    //clock_gettime(CLOCK_REALTIME, &cur);
+    //clock_gettime(CLOCK_MONOTONIC, &cur);
+    clock_gettime(CLOCK_REALTIME, &cur);
     timespec2str(timestr, TIME_FMT, &cur);
     printf ("Current local time and date: %s\n", timestr);
 
