@@ -5,7 +5,7 @@ import string
 import os
 
 page    = 5         # pages
-q_num   = 60        # questions number per pages
+q_num   = 30        # questions number per pages
 max_num = 20        # range
 
 def get_num (min, max):
@@ -26,20 +26,26 @@ def get_q (i, maxnum):
         b = b - 10
 
     if sig==0:
-        fp0.write("(%2d) %d + ___ = %d" %(i,b,a))
+        if a - b > 10:
+            a = a - 10
+        fp0.write(" %d + ___ = %d " %(b,a))
     elif sig==1:
-        fp0.write("(%2d) ___ + %d = %d" %(i,b,a))
+        if a - b > 10:
+            a = a - 10
+        fp0.write(" ___ + %d = %d " %(b,a))
     elif sig==2:
-        fp0.write("(%2d) %d - ___ = %d" %(i,a,b))
+        if a - b > 10:
+            a = a - 10
+        fp0.write(" %d - ___ = %d " %(a,b))
     elif sig==3:
         if a > 10:
             a = a - 10
-        fp0.write("(%2d) ___ - %d = %d" %(i,a,b))
+        fp0.write(" ___ - %d = %d " %(a,b))
 
     if i % 2 == 0:
-        fp0.write("\n")
+        fp0.write("\n\n")
     else:
-        fp0.write(" ")
+        fp0.write("\t\t")
 
 def gen_test(maxnum, times):
     for i in range(1, (times+1), 1):  #times is not included, so + 1
