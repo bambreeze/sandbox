@@ -6,7 +6,7 @@ proc load_config_file {fname} {
         while { ![eof $fid] } {
             gets $fid line
     
-            if { [regexp {^X *, *(0x[a-fA-F0-9]+) *, *(0x[a-fA-F0-9]+).*$} $line dummy addr val] } {
+            if { [regexp {^X *, *(0[xX][a-fA-F0-9]+) *, *(0[xX][a-fA-F0-9]+).*$} $line dummy addr val] } {
                 set addr [string tolower $addr]
                 set val [string tolower $val]
                 puts "write addr: $addr, val: $val"
