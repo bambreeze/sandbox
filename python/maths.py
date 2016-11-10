@@ -15,17 +15,17 @@ def get_q (i, maxnum):
     sig=random.randrange(1,101) % 2 # 0:+ 1:-
     
     if sig==0:
-        fp0.write("%d + %d = ___" %(a,b))
+        fp0.write("%d + %d =    " %(a,b))
     elif sig==1:
         c=max(a,b)
         b=min(a,b)
         a=c             #if a<b, swap a, b to elimination minus numbers
-        fp0.write("%d - %d = ___" %(a,b))
+        fp0.write("%d - %d =    " %(a,b))
 
     if i % 2 == 0:
         fp0.write("\n\n")
     else:
-        fp0.write(" ")
+        fp0.write("\r\t\t")
 
 def get_q2 (i, maxnum):
     a = get_num(1,maxnum)
@@ -34,19 +34,19 @@ def get_q2 (i, maxnum):
     sig=random.randrange(1,101) % 4 # 0:++ 1:+- 2:-+ 3:--
     
     if sig==0:
-        fp0.write("%d + %d + %d = ___" %(a,b,c))
+        fp0.write("%d + %d + %d =    " %(a,b,c))
     elif sig==1:
         if a + b < c:
             x = b
             b = c
             c = b
-        fp0.write("%d + %d - %d = ___" %(a,b,c))
+        fp0.write("%d + %d - %d =    " %(a,b,c))
     elif sig==2:
         if a < b:
             x = a
             a = b
             b = a
-        fp0.write("%d - %d + %d = ___" %(a,b,c))
+        fp0.write("%d - %d + %d =    " %(a,b,c))
     else:
         x = max(a, b)
         y = max(x, c) # max
@@ -61,13 +61,12 @@ def get_q2 (i, maxnum):
             else:
                 b = random.randrange(1, a)
         c = random.randrange(0, a - b)
-        fp0.write("%d - %d - %d = ___" %(a,b,c))
+        fp0.write("%d - %d - %d =    " %(a,b,c))
 
     if i % 2 == 0:
         fp0.write("\n\n")
     else:
-        fp0.write(" ")
-
+        fp0.write("\r\t\t")
 
 def get_q3 (i, maxnum):
     a = get_num(1,maxnum)
@@ -84,24 +83,24 @@ def get_q3 (i, maxnum):
     if sig==0:
         if a - b > 10:
             a = a - 10
-        fp0.write(" %d + ___ = %d " %(b,a))
+        fp0.write(" %d +     = %d " %(b,a))
     elif sig==1:
         if a - b > 10:
             a = a - 10
-        fp0.write(" ___ + %d = %d " %(b,a))
+        fp0.write("     + %d = %d " %(b,a))
     elif sig==2:
         if a - b > 10:
             a = a - 10
-        fp0.write(" %d - ___ = %d " %(a,b))
+        fp0.write(" %d -     = %d " %(a,b))
     elif sig==3:
         if a > 10:
             a = a - 10
-        fp0.write(" ___ - %d = %d " %(a,b))
+        fp0.write("     - %d = %d " %(a,b))
 
     if i % 2 == 0:
         fp0.write("\n\n")
     else:
-        fp0.write(" ")
+        fp0.write("\r\t\t")
 
 def showhelp():
     print "\n================================\n"
@@ -132,7 +131,7 @@ else :
 
     fp0 = open("test.txt", 'w')
     for i in range(1, (page+1), 1):
-        fp0.write( "Date:__/__    Time:___:___ - ___:___\n\n")
+        fp0.write( "Date:__/__    Time: __:__ - __:__\n\n")
 
         times = 30 # questions numbers/page
         for j in range(1, (times+1), 1):  #times is not included, so + 1
