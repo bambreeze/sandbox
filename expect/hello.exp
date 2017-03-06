@@ -1,19 +1,44 @@
 #!/usr/bin/expect -f
+# ./hello.exp root 124456 192.168.1.10
 
+puts "hello, Expect\n"
 set timeout 60
 
-set remote_server 192.168.1.10
-set my_user_id "root"
-set my_password "123456"
-set my_command "ls"
+# read the input parameters
+set user [lindex $argv 0]
+set passw [lindex $argv 1]
+set host [lindex $argv 2]
+set prompt "\\$"
+set cmd "ls"
 
-puts "hello, Expect"
-spawn ssh $my_user_id@$remote_server
-expect "password:" {send "$my_password\r"}
-expect "%" {send "exit\r"}
+# check if all were provided
+if {$user == "" || $passw == "" || $host == ""}  {
+    puts "Usage: <user> <passw> <host>\n"
+    exit 1
+}
+
+puts "Argument data:";
+puts "  user: $user";
+puts "  passw: $passw";
+puts "  host: $host";
+puts "\n"
+
+# connect to server
+spawn ssh $user@$host
+expect "password:" {send "$passw\r"}
+expect "$prompt"
+
+# run the commands in a loop
+for {set i 1} {$i < 3} {incr i} {
+    puts "\n\n      ****** loop $i ******"
+    send "\r"
+    expect "$prompt"
+    send "$cmd\r"
+    expect "$prompt"
+    sleep 1
+}
+
+send "exit\r"
 expect "closed"
-sleep 3
-return
 #interact
-
-
+exit 0
