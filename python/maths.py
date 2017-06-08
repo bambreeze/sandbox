@@ -3,8 +3,10 @@ import random
 import sys
 import string
 import os
+import time
 
 def get_num (min, max):
+    min = 10
     if min>=max:
         return min
     return random.randrange(min, max)
@@ -129,7 +131,7 @@ else :
     page    = string.atoi(sys.argv[2])
     maths_type = string.atoi(sys.argv[3])                            
 
-    fp0 = open("test.txt", 'w')
+    fp0 = open("tmp.txt", 'w')
     for i in range(1, (page+1), 1):
         fp0.write( "Date: __ / __    Time: __ : __  -  __ :__\n\n")
 
@@ -152,4 +154,12 @@ else :
 
     else:
         print "Done"
-    fp0.close
+    fp0.close()
+
+    fp1 = open("tmp.txt") # delete the last line
+    lines = fp1.readlines()
+    fp2 = open("test.txt",'w')
+    fp2.writelines([item for item in lines[:-1]])
+    fp1.close()
+    fp2.close()
+    os.remove("tmp.txt")
