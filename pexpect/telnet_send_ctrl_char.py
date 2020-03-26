@@ -7,7 +7,7 @@ import pexpect
 console_ip = "192.168.1.111"
 console_port = "2011"
 
-process = pexpect.spawn("telnet " + console_ip + " " + console_port)
+process = pexpect.spawn("telnet " + console_ip + " " + console_port, logfile=sys.stdout)
 process.expect("Escape character is")
 process.sendline("\r")
 process.expect(">")
