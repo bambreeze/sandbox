@@ -35,7 +35,3 @@ Example
 =======
 $ pytest --alluredir ./allure-results/; cp -r ./allure-reports/history/ ./allure-results/history; allure generate ./allure-results/ -o ./allure-reports/ --clean; allure open allure-reports/
 
-
-
-
-

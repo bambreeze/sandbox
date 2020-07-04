@@ -2,3 +2,4 @@ Windows
 =======
 $ conda activate tf_2c
 $ jupyter lab
+
