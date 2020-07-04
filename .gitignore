@@ -36,3 +36,8 @@ a.out
 
 # Debug files
 *.dSYM/
+
+.DS_Store
+pytest/allure-reports/
+pytest/allure-results/
+pytest/result.xml
