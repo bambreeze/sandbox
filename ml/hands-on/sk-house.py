@@ -225,3 +225,222 @@ print(housing.describe())
 ###############################################################################
 # Prepare the data for Machine Learning algorithms
 ###############################################################################
+housing = strat_train_set.drop("median_house_value", axis=1) # drop labels for training set
+housing_labels = strat_train_set["median_house_value"].copy()
+
+sample_incomplete_rows = housing[housing.isnull().any(axis=1)].head()
+print(sample_incomplete_rows)
+
+sample_incomplete_rows.dropna(subset=["total_bedrooms"])    # option 1
+print(sample_incomplete_rows)
+
+sample_incomplete_rows.drop("total_bedrooms", axis=1)       # option 2
+print(sample_incomplete_rows)
+
+median = housing["total_bedrooms"].median()
+sample_incomplete_rows["total_bedrooms"].fillna(median, inplace=True) # option 3
+print(sample_incomplete_rows)
+
+try:
+    from sklearn.impute import SimpleImputer # Scikit-Learn 0.20+
+except ImportError:
+    from sklearn.preprocessing import Imputer as SimpleImputer
+
+imputer = SimpleImputer(strategy="median")
+housing_num = housing.drop('ocean_proximity', axis=1)
+# alternatively: housing_num = housing.select_dtypes(include=[np.number])
+imputer.fit(housing_num)
+print(imputer.statistics_)
+print(housing_num.median().values)
+X = imputer.transform(housing_num)
+housing_tr = pd.DataFrame(X, columns=housing_num.columns,
+                          index=housing.index)
+print(housing_tr.loc[sample_incomplete_rows.index.values])
+print(imputer.strategy)
+housing_tr = pd.DataFrame(X, columns=housing_num.columns,
+                          index=housing_num.index)
+print(housing_tr.head())
+
+housing_cat = housing[['ocean_proximity']]
+print(housing_cat.head(10))
+try:
+    from sklearn.preprocessing import OrdinalEncoder
+except ImportError:
+    from future_encoders import OrdinalEncoder # Scikit-Learn < 0.20
+ordinal_encoder = OrdinalEncoder()
+housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
+print(housing_cat_encoded[:10])
+print(ordinal_encoder.categories_)
+
+try:
+    from sklearn.preprocessing import OrdinalEncoder # just to raise an ImportError if Scikit-Learn < 0.20
+    from sklearn.preprocessing import OneHotEncoder
+except ImportError:
+    from future_encoders import OneHotEncoder # Scikit-Learn < 0.20
+
+cat_encoder = OneHotEncoder()
+housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
+print(housing_cat_1hot)
+print(housing_cat_1hot.toarray())
+cat_encoder = OneHotEncoder(sparse=False)
+housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
+print(housing_cat_1hot)
+print(cat_encoder.categories_)
+print(housing.columns)
+
+from sklearn.base import BaseEstimator, TransformerMixin
+
+# get the right column indices: safer than hard-coding indices 3, 4, 5, 6
+rooms_ix, bedrooms_ix, population_ix, household_ix = [
+    list(housing.columns).index(col)
+    for col in ("total_rooms", "total_bedrooms", "population", "households")]
+
+class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
+    def __init__(self, add_bedrooms_per_room = True): # no *args or **kwargs
+        self.add_bedrooms_per_room = add_bedrooms_per_room
+    def fit(self, X, y=None):
+        return self  # nothing else to do
+    def transform(self, X, y=None):
+        rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+        population_per_household = X[:, population_ix] / X[:, household_ix]
+        if self.add_bedrooms_per_room:
+            bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+            return np.c_[X, rooms_per_household, population_per_household,
+                         bedrooms_per_room]
+        else:
+            return np.c_[X, rooms_per_household, population_per_household]
+
+attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=False)
+housing_extra_attribs = attr_adder.transform(housing.values)
+
+from sklearn.preprocessing import FunctionTransformer
+
+def add_extra_features(X, add_bedrooms_per_room=True):
+    rooms_per_household = X[:, rooms_ix] / X[:, household_ix]
+    population_per_household = X[:, population_ix] / X[:, household_ix]
+    if add_bedrooms_per_room:
+        bedrooms_per_room = X[:, bedrooms_ix] / X[:, rooms_ix]
+        return np.c_[X, rooms_per_household, population_per_household,
+                     bedrooms_per_room]
+    else:
+        return np.c_[X, rooms_per_household, population_per_household]
+
+attr_adder = FunctionTransformer(add_extra_features, validate=False,
+                                 kw_args={"add_bedrooms_per_room": False})
+housing_extra_attribs = attr_adder.fit_transform(housing.values)
+
+housing_extra_attribs = pd.DataFrame(
+    housing_extra_attribs,
+    columns=list(housing.columns)+["rooms_per_household", "population_per_household"],
+    index=housing.index)
+housing_extra_attribs.head()
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+num_pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy="median")),
+        ('attribs_adder', FunctionTransformer(add_extra_features, validate=False)),
+        ('std_scaler', StandardScaler()),
+    ])
+
+housing_num_tr = num_pipeline.fit_transform(housing_num)
+print(housing_num_tr)
+
+try:
+    from sklearn.compose import ColumnTransformer
+except ImportError:
+    from future_encoders import ColumnTransformer # Scikit-Learn < 0.20
+
+num_attribs = list(housing_num)
+cat_attribs = ["ocean_proximity"]
+
+full_pipeline = ColumnTransformer([
+        ("num", num_pipeline, num_attribs),
+        ("cat", OneHotEncoder(), cat_attribs),
+    ])
+
+housing_prepared = full_pipeline.fit_transform(housing)
+print(housing_prepared)
+print(housing_prepared.shape)
+
+from sklearn.base import BaseEstimator, TransformerMixin
+
+# Create a class to select numerical or categorical columns 
+class OldDataFrameSelector(BaseEstimator, TransformerMixin):
+    def __init__(self, attribute_names):
+        self.attribute_names = attribute_names
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        return X[self.attribute_names].values
+
+num_attribs = list(housing_num)
+cat_attribs = ["ocean_proximity"]
+
+old_num_pipeline = Pipeline([
+        ('selector', OldDataFrameSelector(num_attribs)),
+        ('imputer', SimpleImputer(strategy="median")),
+        ('attribs_adder', FunctionTransformer(add_extra_features, validate=False)),
+        ('std_scaler', StandardScaler()),
+    ])
+
+old_cat_pipeline = Pipeline([
+        ('selector', OldDataFrameSelector(cat_attribs)),
+        ('cat_encoder', OneHotEncoder(sparse=False)),
+    ])
+
+from sklearn.pipeline import FeatureUnion
+
+old_full_pipeline = FeatureUnion(transformer_list=[
+        ("num_pipeline", old_num_pipeline),
+        ("cat_pipeline", old_cat_pipeline),
+    ])
+
+old_housing_prepared = old_full_pipeline.fit_transform(housing)
+print(old_housing_prepared)
+print(np.allclose(housing_prepared, old_housing_prepared))
+
+
+###############################################################################
+# Select and train a model
+###############################################################################
+from sklearn.linear_model import LinearRegression
+
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_labels)
+
+# let's try the full preprocessing pipeline on a few training instances
+some_data = housing.iloc[:5]
+some_labels = housing_labels.iloc[:5]
+some_data_prepared = full_pipeline.transform(some_data)
+
+print("Predictions:", lin_reg.predict(some_data_prepared))
+print("Labels:", list(some_labels))
+print(some_data_prepared)
+
+from sklearn.metrics import mean_squared_error
+
+housing_predictions = lin_reg.predict(housing_prepared)
+lin_mse = mean_squared_error(housing_labels, housing_predictions)
+lin_rmse = np.sqrt(lin_mse)
+print(lin_rmse)
+
+from sklearn.metrics import mean_absolute_error
+
+lin_mae = mean_absolute_error(housing_labels, housing_predictions)
+print(lin_mae)
+
+from sklearn.tree import DecisionTreeRegressor
+
+tree_reg = DecisionTreeRegressor(random_state=42)
+tree_reg.fit(housing_prepared, housing_labels)
+
+housing_predictions = tree_reg.predict(housing_prepared)
+tree_mse = mean_squared_error(housing_labels, housing_predictions)
+tree_rmse = np.sqrt(tree_mse)
+print(tree_rmse)
+
+###############################################################################
+# Fine-tune your model
+###############################################################################
