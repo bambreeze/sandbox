@@ -43,3 +43,4 @@ pytest/allure-results/
 pytest/result.xml
 
 .vscode
+ml/hands-on/datasets/mnist/
