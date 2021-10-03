@@ -2,6 +2,6 @@
 
 int main()
 {
-    printf("Hello, VSCode!\n");
+    printf("Hello, C!\n");
     return 0;
 }
