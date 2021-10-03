@@ -1,30 +1,31 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
+#include <stdio.h>
+#include <math.h>
 
-int prime(int num)
+int is_prime(int num)
 {
-    int tgt = 0, j = 0;
-    for (tgt = 3; tgt <= num; tgt++) {
-        for (j = 2; j < tgt; j++) {
-            if (tgt % j == 0) {
-                break;
-            }
-        }
+    int i = 0;
 
-        if (j == tgt) {
-            printf("%d  ", tgt);
+    for (i = 2; i < sqrt(num); i++) {
+        if (num % i == 0) {
+           return 0; 
         }
     }
 
-    return 0;
+    return 1;
 }
 
 int main (void)
 {
-    int i;
+    int num = 2;
+    int counter = 0;
 
-    prime(20);
+    while (counter < 10) {
+        if (is_prime(num)) {
+            printf("%d ", num);
+            counter++;
+        }
+        num++;
+    }
 
     return 0;
 }
