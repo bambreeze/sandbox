@@ -44,3 +44,8 @@ pytest/result.xml
 
 .vscode
 ml/hands-on/datasets/mnist/
+
+# C binary
+exam/exam0_basic
+exam/exam1_prime
+exam/exam2_bits
