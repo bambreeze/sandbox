@@ -99,6 +99,8 @@ plot_roc_curve(fpr, tpr)
 save_fig("roc_curve_plot", "mnist")
 #plt.show()
 
+print(X_train, y_train_5, y_train_pred)
+
 ###############################################################################
 # Select and train a model - Multiclass classification
 ###############################################################################

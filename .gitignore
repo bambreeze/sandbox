@@ -1,3 +1,6 @@
+# user
+ml/hands-on/images/
+
 cscope*
 tags
 .*swp
@@ -49,3 +52,4 @@ ml/hands-on/datasets/mnist/
 exam/exam0_basic
 exam/exam1_prime
 exam/exam2_bits
+
